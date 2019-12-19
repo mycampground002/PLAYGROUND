@@ -1,6 +1,16 @@
 version: "3"
 
 services:
+  db:
+    image: mysql:8.0.18
+    command: --lower_case_table_names=1 --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=my_database
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_HOST=%
+
   server:
     build: ./server
     volumes:
@@ -10,6 +20,8 @@ services:
     stdin_open: true
     tty: true
     command: python3 manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
   client:
     build: ./client
     volumes:
@@ -22,3 +34,6 @@ services:
     depends_on:
       - server
     command: yarn watch
+
+volumes:
+  mysql:

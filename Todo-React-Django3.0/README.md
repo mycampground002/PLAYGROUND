@@ -1,4 +1,4 @@
-## 개발환경 구성 (처음 시작)
+## 개발환경 구성 (처음 시작시)
 윈도우 환경에서 실행
 
 ### SERVER - Django app 도커파일 작성
@@ -88,7 +88,7 @@ CMD yarn watch
 
 
 
-### 서버, 클라이언트 도커 빌드
+### 서버, 클라이언트, MYSQL 도커 빌드
 
 `docker-compose.yml`
 
@@ -96,6 +96,16 @@ CMD yarn watch
 version: "3"
 
 services:
+  db:
+    image: mysql:8.0.18
+    command: --lower_case_table_names=1 --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=my_database
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_HOST=%
+
   server:
     build: ./server
     volumes:
@@ -105,6 +115,8 @@ services:
     stdin_open: true
     tty: true
     command: python3 manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
   client:
     build: ./client
     volumes:
@@ -117,11 +129,69 @@ services:
     depends_on:
       - server
     command: yarn watch
+
+volumes:
+  mysql:
 ```
 
 - ` docker-compose up`  으로 빌드
 - 윈도우 가상머신에서 Host와 Guest의 PORT를 맞추어줌
 - localhost 8000, 3000에 접속에 성공 확인
+
+
+
+**Docker-compose를 수정했을 때**
+
+```bash
+$ docker-compose up --build '컨테이너'
+```
+
+**백그라운드 실행**
+
+```bash
+$ docker-compose up -d
+```
+
+**컨테이너 중지**
+
+```bash
+$ docker-compose down '컨테이너'
+```
+
+
+
+
+
+### Django, Mysql 연동
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': os.path.join(BASE_DIR, 'mysql.cnf')
+        },
+    }
+}
+```
+
+```
+[client]
+database = my_database
+host = 192.168.99.100
+port = 3306
+user = root
+password = password
+default-character-set = utf8
+```
+
+
+
+## 개발환경 접속
+
+```bash
+$ docker-compose up -d
+```
 
 
 
