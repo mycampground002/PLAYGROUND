@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  server:
+    build: ./server
+    volumes:
+      - ./server:/app/server
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
+    command: python3 manage.py runserver 0.0.0.0:8000
+  client:
+    build: ./client
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - server
+    command: yarn watch
