@@ -189,12 +189,17 @@ default-character-set = utf8
 
 ## 개발환경 접속
 
+**컨테이너 실행**
 ```bash
 $ docker-compose up -d
 ```
 
+**컨테이너 로그 확인**
 
+```bash
+$ docker logs -f todo-react-django30_server_1
+```
 
-
+* 컨테이너 NAME
 
 
