@@ -7,10 +7,13 @@
     "watch": "parcel --port=3000 src/index.html"
   },
   "devDependencies": {
+    "@types/styled-components": "^4.4.1",
     "parcel-bundler": "^1.12.4",
     "typescript": "^3.7.3"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
+    "@types/react": "^16.9.16",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
   }

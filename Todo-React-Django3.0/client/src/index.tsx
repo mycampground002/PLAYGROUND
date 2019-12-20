@@ -1,4 +1,6 @@
-import * as React from "react";
-import { render } from "react-dom";
+import * as React from 'react';
+import { render } from 'react-dom';
 
-render(<h1>Working</h1>, document.getElementById("app"));
+import App from './App';
+
+render(<App />, document.getElementById('app'));
