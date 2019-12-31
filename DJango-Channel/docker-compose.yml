@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:5.0.7-alpine
+    build:
+      context: ./redis
+    ports:
+      - "6379:6379"
+
+  channels:
+    build: ./server
+    command: daphne -b 0.0.0.0 -p 8000 server.asgi:application
+    volumes:
+      - ./server:/chatbot/server
+    ports:
+      - "8000:8000"
+    links:
+      - redis
