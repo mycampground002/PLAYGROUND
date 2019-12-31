@@ -1,0 +1,32 @@
+version: "3"
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: time
+  
+  node:
+    build: ./
+    volumes:
+      - .:/node/server
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - db
+
+
+    
+volumes:
+  mysql_data:
